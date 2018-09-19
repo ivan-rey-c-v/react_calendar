@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
 import { elideMonth } from '../../utils/misc';
 
 const Section = styled.section`
-	> ul {
+	> ol {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-auto-rows: 5.5rem;
@@ -16,13 +18,17 @@ const Section = styled.section`
 		> li {
 			width: 100%;
 			height: 100%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			cursor: pointer;
 
-			> p.dark-box {
-				color: #33cccc;
+			> a {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				cursor: pointer;
+				width: 100%;
+				height: 100%;
+				> p.dark-box {
+					color: #33cccc;
+				}
 			}
 			&:hover {
 				background-color: paleturquoise;
@@ -38,19 +44,27 @@ export default class YearSection extends Component {
 	render() {
 		return (
 			<Section>
-				<ul>
+				<ol>
 					{this.props.monthsList.map((month, index) => (
 						<li key={month}>
-							<p
-								className={
-									this.props.currentMonthIndex === index ? 'dark-box blue' : ''
-								}
+							<Link
+								to={{
+									pathname: `/month-${index}`
+								}}
 							>
-								{elideMonth(month)}
-							</p>
+								<p
+									className={
+										this.props.currentMonthIndex === index
+											? 'dark-box blue'
+											: ''
+									}
+								>
+									{elideMonth(month)}
+								</p>
+							</Link>
 						</li>
 					))}
-				</ul>
+				</ol>
 			</Section>
 		);
 	}
