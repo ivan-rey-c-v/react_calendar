@@ -32,18 +32,14 @@ const Header = styled.header`
 		}
 	}
 
-	& .day {
-		font-size: 125%;
+	& .default {
+		font-size: 150%;
 		font-weight: 600;
 	}
 `;
 
 export default class DayHeader extends Component {
 	render() {
-		console.log({
-			dayOfMonth: this.props.dayOfMonth,
-			dayIndex: this.props.dayIndex
-		});
 		return (
 			<Header>
 				<div className="nav" onClick={this.props.onClick}>
@@ -51,14 +47,16 @@ export default class DayHeader extends Component {
 						<span>&lt;</span>
 						<span>{this.props.year}</span>
 					</span>
-					<p className={this.props.isCurrentMonth ? 'dark-box' : ''}>
+					<p className={this.props.isCurrentMonth ? 'dark-box' : 'default'}>
 						{this.props.monthName}
 					</p>
 				</div>
 				<div>
 					<p
 						className={
-							this.props.dayOfMonth === this.props.dayIndex ? 'dark-box' : 'day'
+							this.props.dayOfMonth === this.props.dayIndex
+								? 'dark-box'
+								: 'default'
 						}
 					>
 						{this.props.dayIndex}

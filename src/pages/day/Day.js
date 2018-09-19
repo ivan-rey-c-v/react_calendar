@@ -3,12 +3,20 @@ import styled from 'styled-components';
 
 import { RootContext } from '../../context/RootContext';
 import DayHeader from './DayHeader';
+import DaySection from './DaySection';
 
 const Main = styled.main``;
 
 export default class Day extends Component {
 	goToMonth = () => {
 		this.props.history.push(`/month-${this.props.match.params.monthIndex}`);
+	};
+
+	chooseFeature = () => {
+		const { monthIndex, dayIndex } = this.props.match.params;
+		this.props.history.push(
+			`/month-${monthIndex}/day-${dayIndex}/choosefeature`
+		);
 	};
 
 	render() {
@@ -32,6 +40,7 @@ export default class Day extends Component {
 								dayIndex={Number(dayIndex)}
 								onClick={this.goToMonth}
 							/>
+							<DaySection onClick={this.chooseFeature} />
 						</Main>
 					);
 				}}
