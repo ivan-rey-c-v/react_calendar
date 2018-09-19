@@ -6,7 +6,20 @@ export class RootStore extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			key: 'value'
+			monthsList: [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
+			]
 		};
 	}
 
