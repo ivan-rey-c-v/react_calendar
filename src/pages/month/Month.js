@@ -25,7 +25,6 @@ export default class Month extends Component {
 					const daysArray = createDaysArray(year, monthIndex);
 
 					const dayOfMonth = isCurrentMonth && day;
-					console.log({ dayOfMonth });
 
 					return (
 						<Main>
@@ -36,7 +35,11 @@ export default class Month extends Component {
 								onClick={this.goToYear}
 							/>
 							<WeekDays />
-							<MonthSection daysArray={daysArray} dayOfMonth={dayOfMonth} />
+							<MonthSection
+								daysArray={daysArray}
+								dayOfMonth={dayOfMonth}
+								monthIndex={monthIndex}
+							/>
 						</Main>
 					);
 				}}

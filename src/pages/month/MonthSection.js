@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import createDaysArray from '../../utils/createDaysArray';
+import { Link } from 'react-router-dom';
 
 const Section = styled.section`
 	> ol {
@@ -36,11 +36,13 @@ export default class MonthSection extends Component {
 					{this.props.daysArray.map(day => {
 						return (
 							<li key={day}>
-								<code
-									className={this.props.dayOfMonth === day ? 'dark-box' : ''}
-								>
-									{day}
-								</code>
+								<Link to={`/month-${this.props.monthIndex}/day-${day}`}>
+									<code
+										className={this.props.dayOfMonth === day ? 'dark-box' : ''}
+									>
+										{day}
+									</code>
+								</Link>
 							</li>
 						);
 					})}
