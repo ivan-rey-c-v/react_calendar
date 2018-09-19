@@ -14,7 +14,7 @@ const Main = styled.main`
 		height: 5rem;
 		font-size: 2.5em;
 		> h1 {
-			color: mediumspringgreen;
+			color: #009933;
 		}
 	}
 	> section {
@@ -35,6 +35,10 @@ const Main = styled.main`
 				justify-content: center;
 				align-items: center;
 				cursor: pointer;
+
+				> p.dark-box {
+					color: #33cccc;
+				}
 				&:hover {
 					background-color: paleturquoise;
 				}
@@ -53,13 +57,21 @@ export default class Year extends Component {
 				{({ rootState }) => (
 					<Main>
 						<header>
-							<h1 className="dark-box">2018</h1>
+							<h1 className="dark-box">{rootState.currentDate.year}</h1>
 						</header>
 						<section>
 							<ul>
-								{rootState.monthsList.map(month => (
-									<li>
-										<p className="">{elideMonth(month)}</p>
+								{rootState.monthsList.map((month, index) => (
+									<li key={month}>
+										<p
+											className={
+												rootState.currentDate.month === index
+													? 'dark-box blue'
+													: ''
+											}
+										>
+											{elideMonth(month)}
+										</p>
 									</li>
 								))}
 							</ul>

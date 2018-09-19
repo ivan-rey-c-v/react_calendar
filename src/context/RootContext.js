@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import getNewDate from '../utils/getNewDate';
 
 export const RootContext = React.createContext();
 
@@ -6,6 +7,7 @@ export class RootStore extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			currentDate: {},
 			monthsList: [
 				'January',
 				'February',
@@ -21,6 +23,12 @@ export class RootStore extends Component {
 				'December'
 			]
 		};
+	}
+
+	componentWillMount() {
+		console.log('Mounting RootStore');
+		const currentDate = getNewDate();
+		this.setState({ currentDate });
 	}
 
 	render() {
