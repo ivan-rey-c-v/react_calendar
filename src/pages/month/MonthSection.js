@@ -28,6 +28,17 @@ const Section = styled.section`
 	}
 `;
 
+const Li = styled.li`
+	${props => {
+		if (props.start) {
+			return {
+				// grid column starts at 1
+				gridColumnStart: props.start + 1
+			};
+		}
+	}};
+`;
+
 export default class MonthSection extends Component {
 	render() {
 		return (
@@ -35,7 +46,7 @@ export default class MonthSection extends Component {
 				<ol>
 					{this.props.daysArray.map(day => {
 						return (
-							<li key={day}>
+							<Li key={day} start={day === 1 ? this.props.startOfMonth : null}>
 								<Link to={`/month-${this.props.monthIndex}/day-${day}`}>
 									<code
 										className={this.props.dayOfMonth === day ? 'dark-box' : ''}
@@ -43,7 +54,7 @@ export default class MonthSection extends Component {
 										{day}
 									</code>
 								</Link>
-							</li>
+							</Li>
 						);
 					})}
 				</ol>

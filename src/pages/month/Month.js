@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { RootContext } from '../../context/RootContext';
 import createDaysArray from '../../utils/createDaysArray';
+import getStartOfMonth from '../../utils/getStartOfMonth';
 
 import MonthHeader from './MonthHeader';
 import WeekDays from './WeekDays';
@@ -26,6 +27,8 @@ export default class Month extends Component {
 
 					const dayOfMonth = isCurrentMonth && day;
 
+					const startOfMonth = getStartOfMonth(year, monthIndex);
+
 					return (
 						<Main>
 							<MonthHeader
@@ -39,6 +42,7 @@ export default class Month extends Component {
 								daysArray={daysArray}
 								dayOfMonth={dayOfMonth}
 								monthIndex={monthIndex}
+								startOfMonth={startOfMonth}
 							/>
 						</Main>
 					);
