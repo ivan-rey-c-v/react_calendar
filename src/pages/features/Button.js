@@ -24,7 +24,7 @@ export default class ButtonComponent extends Component {
 	render() {
 		return (
 			<Button
-				className={this.props.primary ? 'primary' : 'default'}
+				className={this.props.primary ? 'dark-box' : 'default'}
 				onClick={this.props.onClick}
 			>
 				{this.props.value}
