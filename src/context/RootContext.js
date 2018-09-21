@@ -7,47 +7,7 @@ export class RootStore extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			todoItems: {},
-			activities: {
-				'2018-8-21': [
-					{
-						type: 'Notes',
-						id: 'Notes-823-Z*#90',
-						title: 'Title of my Notes',
-						content:
-							'Lorem Ipsum Precision touchpad with bluelight shield, HDMI port and Gigabit LAN.'
-					},
-					{
-						type: 'Reminder',
-						id: 'Reminder-411-KHG$',
-						title: '4:30',
-						content: 'Do something within this time'
-					},
-					{
-						type: 'Todo',
-						id: 'Todo-360-%lg^cvv',
-						title: 'Grocery',
-						content: '',
-						todos: [
-							{
-								id: 'todo-item-23187',
-								text: 'Milk',
-								done: true
-							},
-							{
-								id: 'todo-item-asdfg1',
-								text: 'Bread',
-								done: false
-							},
-							{
-								id: 'todo-item-43v234v',
-								text: 'Cooking oil',
-								done: false
-							}
-						]
-					}
-				]
-			},
+			activities: {},
 			currentDate: {},
 			monthsList: [
 				'January',
@@ -67,9 +27,38 @@ export class RootStore extends Component {
 	}
 
 	componentWillMount() {
+		// const currentDate = getNewDate();
+		// this.setState({ currentDate });
+		this.setNewDate();
+		const stateFromStorage = this.getStateFromLocalStorage();
+		if (stateFromStorage) {
+			this.setState(stateFromStorage);
+		}
+	}
+
+	componentDidUpdate() {
+		console.log('root context app did mount');
+		this.saveStateToLocalStorage();
+	}
+
+	saveStateToLocalStorage = () => {
+		const JSONState = JSON.stringify(this.state);
+		const appName = 'react_calendar_simple_example';
+		console.log('saving state to localstorage');
+		window.localStorage.setItem(appName, JSONState);
+	};
+
+	getStateFromLocalStorage = () => {
+		const appName = 'react_calendar_simple_example';
+		const JSONState = window.localStorage.getItem(appName);
+		console.log(`getting state from localstorage.... project-name: ${appName}`);
+		return JSON.parse(JSONState);
+	};
+
+	setNewDate = () => {
 		const currentDate = getNewDate();
 		this.setState({ currentDate });
-	}
+	};
 
 	addFeatureItem = payload => {
 		const { activityID } = payload;
@@ -120,10 +109,6 @@ export class RootStore extends Component {
 			return this.state.todoItems[todoID];
 		});
 	};
-
-	componentDidUpdate() {
-		console.log('root context app did mount', this.state);
-	}
 
 	render() {
 		return (
