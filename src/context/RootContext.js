@@ -8,7 +8,46 @@ export class RootStore extends Component {
 		super(props);
 		this.state = {
 			todoItems: {},
-			activities: {},
+			activities: {
+				'2018-8-21': [
+					{
+						type: 'Notes',
+						id: 'Notes-823-Z*#90',
+						title: 'Title of my Notes',
+						content:
+							'Lorem Ipsum Precision touchpad with bluelight shield, HDMI port and Gigabit LAN.'
+					},
+					{
+						type: 'Reminder',
+						id: 'Reminder-411-KHG$',
+						title: '4:30',
+						content: 'Do something within this time'
+					},
+					{
+						type: 'Todo',
+						id: 'Todo-360-%lg^cvv',
+						title: 'Grocery',
+						content: '',
+						todos: [
+							{
+								id: 'todo-item-23187',
+								text: 'Milk',
+								done: true
+							},
+							{
+								id: 'todo-item-asdfg1',
+								text: 'Bread',
+								done: false
+							},
+							{
+								id: 'todo-item-43v234v',
+								text: 'Cooking oil',
+								done: false
+							}
+						]
+					}
+				]
+			},
 			currentDate: {},
 			monthsList: [
 				'January',
@@ -28,7 +67,6 @@ export class RootStore extends Component {
 	}
 
 	componentWillMount() {
-		console.log('Mounting RootStore');
 		const currentDate = getNewDate();
 		this.setState({ currentDate });
 	}
@@ -41,8 +79,6 @@ export class RootStore extends Component {
 
 		const updatedActivityList = [...activityList, payload];
 
-		console.log({ payload, activityID, updatedActivityList });
-
 		this.setState(prevState => {
 			return {
 				activities: {
@@ -53,15 +89,27 @@ export class RootStore extends Component {
 		});
 	};
 
-	updateTodoItemStatus = itemID => {
+	updateTodoItemStatus = (activitiesID, todoID, itemID) => {
 		this.setState(prevState => {
-			const todoItem = prevState.todoItems[itemID];
-			todoItem.done = !todoItem.done;
+			const activities = prevState.activities[activitiesID];
+			const updatedActivities = activities.map(activity => {
+				if (activity.id === todoID) {
+					const updatedTodos = activity.todos.map(todo => {
+						if (todo.id === itemID) {
+							todo.done = !todo.done;
+							return todo;
+						} else return todo;
+					});
+
+					activity.todos = updatedTodos;
+					return activity;
+				} else return activity;
+			});
 
 			return {
-				todoItems: {
-					...prevState.todoItems[itemID],
-					[itemID]: todoItem
+				activities: {
+					...prevState.activities,
+					[activitiesID]: updatedActivities
 				}
 			};
 		});
@@ -72,6 +120,10 @@ export class RootStore extends Component {
 			return this.state.todoItems[todoID];
 		});
 	};
+
+	componentDidUpdate() {
+		console.log('root context app did mount', this.state);
+	}
 
 	render() {
 		return (

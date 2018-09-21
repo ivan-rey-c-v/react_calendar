@@ -22,13 +22,16 @@ export default class Day extends Component {
 	render() {
 		return (
 			<RootContext>
-				{({ rootState }) => {
+				{({ rootState, events }) => {
 					const { monthIndex, dayIndex } = this.props.match.params;
 					const { year, month, day } = rootState.currentDate;
 					const monthName = rootState.monthsList[monthIndex];
 
 					const isCurrentMonth = month === Number(monthIndex);
 					const dayOfMonth = isCurrentMonth && day;
+
+					const activitiesID = `${year}-${monthIndex}-${dayIndex}`;
+					const activities = rootState.activities[activitiesID];
 
 					return (
 						<Main>
@@ -40,7 +43,14 @@ export default class Day extends Component {
 								dayIndex={Number(dayIndex)}
 								onClick={this.goToMonth}
 							/>
-							<DaySection onClick={this.chooseFeature} />
+							<DaySection
+								onClick={this.chooseFeature}
+								activities={activities ? activities : []}
+								updateTodoItemStatus={{
+									activitiesID,
+									event: events.updateTodoItemStatus
+								}}
+							/>
 						</Main>
 					);
 				}}

@@ -69,7 +69,7 @@ export default class Todo extends Component {
 		};
 	}
 
-	addTodo = e => {
+	addTodoItem = e => {
 		const value = e.target.value;
 		const id = e.target.getAttribute('id');
 
@@ -133,6 +133,27 @@ export default class Todo extends Component {
 		this.setState({ content });
 	};
 
+	addTodos = (e, rootState, events) => {
+		e.preventDefault();
+		const { monthIndex, dayIndex } = this.props.match.params;
+		const { title, todos } = this.state;
+		const activityID = `${
+			rootState.currentDate.year
+		}-${monthIndex}-${dayIndex}`;
+
+		const payload = {
+			type: 'Todo',
+			title,
+			todos,
+			activityID,
+			content: '',
+			id: setRandomID('Todo-')
+		};
+		events.addFeatureItem(payload);
+		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}`);
+		console.log('Todo was saved!');
+	};
+
 	render() {
 		return (
 			<RootContext.Consumer>
@@ -158,7 +179,7 @@ export default class Todo extends Component {
 												type="text"
 												value={todo.text}
 												id={todo.id}
-												onChange={this.addTodo}
+												onChange={this.addTodoItem}
 											/>
 										);
 									})}
@@ -170,25 +191,7 @@ export default class Todo extends Component {
 										value="Add Todo"
 										primary={true}
 										onClick={e => {
-											e.preventDefault();
-											const { monthIndex, dayIndex } = this.props.match.params;
-											const { title, todos } = this.state;
-											const activityID = `${
-												rootState.currentDate.year
-											}-${monthIndex}-${dayIndex}`;
-
-											const payload = {
-												title,
-												todos,
-												activityID,
-												content: '',
-												id: setRandomID('Todo-')
-											};
-											events.addFeatureItem(payload);
-											this.props.history.push(
-												`/month-${monthIndex}/day-${dayIndex}`
-											);
-											console.log('Todo was saved!');
+											this.addTodos(e, rootState, events);
 										}}
 									/>
 								</div>

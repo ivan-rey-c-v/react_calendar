@@ -43,9 +43,9 @@ export default class Reminder extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			hour: '',
+			hour: 1,
 			minutes: 1,
-			content: 1
+			content: ''
 		};
 	}
 
@@ -81,7 +81,7 @@ export default class Reminder extends Component {
 								<div className="time">
 									<ReminderTime limit={24} onChange={this.setNewHour} />
 									<p className="colon">:</p>
-									<ReminderTime limit={60} onChange={this.setNewHour} />
+									<ReminderTime limit={60} onChange={this.setNewMinutes} />
 								</div>
 								<textarea
 									name="reminder-content"
@@ -101,12 +101,15 @@ export default class Reminder extends Component {
 											e.preventDefault();
 											const { monthIndex, dayIndex } = this.props.match.params;
 											const { hour, minutes, content } = this.state;
-											const title = `${hour}:${minutes}`;
+											const title = `${String(hour).padStart(2, '0')}:${String(
+												minutes
+											).padStart(2, '0')}`;
 											const activityID = `${
 												rootState.currentDate.year
 											}-${monthIndex}-${dayIndex}`;
 
 											const payload = {
+												type: 'Reminder',
 												title,
 												content,
 												activityID,

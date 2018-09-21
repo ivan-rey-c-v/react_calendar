@@ -113,6 +113,7 @@ export default class Todo extends Component {
 											}-${monthIndex}-${dayIndex}`;
 
 											const payload = {
+												type: 'Notes',
 												title,
 												content,
 												activityID,
