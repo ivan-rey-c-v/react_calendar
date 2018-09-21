@@ -50,6 +50,7 @@ export default class Day extends Component {
 									activitiesID,
 									event: events.updateTodoItemStatus
 								}}
+								removeActivity={events.removeActivity}
 							/>
 						</Main>
 					);

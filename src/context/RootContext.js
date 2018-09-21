@@ -37,7 +37,6 @@ export class RootStore extends Component {
 	}
 
 	componentDidUpdate() {
-		console.log('root context app did mount');
 		this.saveStateToLocalStorage();
 	}
 
@@ -104,9 +103,18 @@ export class RootStore extends Component {
 		});
 	};
 
-	getTodoItems = idArray => {
-		return idArray.map(todoID => {
-			return this.state.todoItems[todoID];
+	removeActivity = (activitiesID, activityID) => {
+		this.setState(prevState => {
+			const newActivities = prevState.activities[activitiesID].filter(
+				activity => activity.id !== activityID
+			);
+
+			return {
+				activities: {
+					...prevState.activities,
+					[activitiesID]: newActivities
+				}
+			};
 		});
 	};
 
@@ -118,7 +126,7 @@ export class RootStore extends Component {
 					setRootState: this.setState.bind(this),
 					events: {
 						addFeatureItem: this.addFeatureItem,
-						getTodoItems: this.getTodoItems,
+						removeActivity: this.removeActivity,
 						updateTodoItemStatus: this.updateTodoItemStatus
 					}
 				}}

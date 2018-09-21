@@ -20,9 +20,38 @@ const Div = styled.div`
 		font-size: 1.1rem;
 		font-weight: 600;
 	}
+
+	position: relative;
+
+	> .remove {
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 2rem;
+		width: 2rem;
+		font-weight: 600;
+		color: crimson;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+
+		&:hover {
+			background-color: lightgray;
+		}
+		&:active {
+			transform: scale(0.9);
+		}
+	}
 `;
 
 export default class Activity extends Component {
+	handleRemoveActivity = () => {
+		const { removeActivity, activity, updateTodoItemStatus } = this.props;
+
+		removeActivity(updateTodoItemStatus.activitiesID, activity.id);
+	};
+
 	render() {
 		return (
 			<Div>
@@ -44,6 +73,10 @@ export default class Activity extends Component {
 							/>
 						))}
 				</div>
+
+				<span className="remove" onClick={this.handleRemoveActivity}>
+					x
+				</span>
 			</Div>
 		);
 	}

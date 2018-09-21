@@ -27,6 +27,7 @@ export default class DaySection extends Component {
 							activity={activity}
 							key={activity.id}
 							updateTodoItemStatus={this.props.updateTodoItemStatus}
+							removeActivity={this.props.removeActivity}
 						/>
 					))}
 				</div>
