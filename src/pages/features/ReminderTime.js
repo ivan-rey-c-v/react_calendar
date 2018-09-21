@@ -6,6 +6,7 @@ import createArrayOfNumbers from '../../utils/createArrayOfNumbers';
 const Select = styled.select`
 	font-size: 200%;
 	font-weight: 600;
+	cursor: pointer;
 `;
 
 export default class ReminderTime extends Component {

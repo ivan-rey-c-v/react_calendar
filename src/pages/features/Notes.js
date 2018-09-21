@@ -33,7 +33,7 @@ const Main = styled.main`
 
 		> textarea {
 			margin-top: 1rem;
-			padding: 0.25rem 0.3rem;
+			padding: 0.5rem;
 		}
 	}
 
@@ -73,6 +73,27 @@ export default class Todo extends Component {
 		this.setState({ content });
 	};
 
+	addNotes = (e, rootState, events) => {
+		e.preventDefault();
+		const { monthIndex, dayIndex } = this.props.match.params;
+		const { title, content } = this.state;
+
+		const activityID = `${
+			rootState.currentDate.year
+		}-${monthIndex}-${dayIndex}`;
+
+		const payload = {
+			type: 'Notes',
+			title,
+			content,
+			activityID,
+			id: setRandomID('Notes-')
+		};
+		events.addFeatureItem(payload);
+		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}`);
+		console.log('notes was saved!');
+	};
+
 	render() {
 		return (
 			<RootContext.Consumer>
@@ -103,27 +124,9 @@ export default class Todo extends Component {
 									<Button
 										value="Add Todo"
 										primary={true}
+										disabled={!this.state.content}
 										onClick={e => {
-											e.preventDefault();
-											const { monthIndex, dayIndex } = this.props.match.params;
-											const { title, content } = this.state;
-
-											const activityID = `${
-												rootState.currentDate.year
-											}-${monthIndex}-${dayIndex}`;
-
-											const payload = {
-												type: 'Notes',
-												title,
-												content,
-												activityID,
-												id: setRandomID('Notes-')
-											};
-											events.addFeatureItem(payload);
-											this.props.history.push(
-												`/month-${monthIndex}/day-${dayIndex}`
-											);
-											console.log('notes was saved!');
+											this.addNotes(e, rootState, events);
 										}}
 									/>
 								</div>

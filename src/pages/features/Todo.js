@@ -33,7 +33,7 @@ const Main = styled.main`
 
 		> textarea {
 			margin-top: 1rem;
-			padding: 0.25rem 0.3rem;
+			padding: 0.5rem;
 		}
 
 		> .todos {
@@ -193,6 +193,9 @@ export default class Todo extends Component {
 										onClick={e => {
 											this.addTodos(e, rootState, events);
 										}}
+										disabled={
+											!this.state.todos.filter(v => v.text !== '').length > 0
+										}
 									/>
 								</div>
 							</form>

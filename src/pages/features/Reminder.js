@@ -28,6 +28,7 @@ const Main = styled.main`
 		}
 		> textarea {
 			margin-top: 1rem;
+			padding: 0.5rem;
 		}
 
 		> .button-div {
@@ -51,11 +52,9 @@ export default class Reminder extends Component {
 
 	setNewHour = hour => {
 		this.setState({ hour });
-		console.log({ hour });
 	};
 	setNewMinutes = minutes => {
 		this.setState({ minutes });
-		console.log({ minutes });
 	};
 	handleContentChange = e => {
 		const content = e.target.value;
@@ -64,10 +63,33 @@ export default class Reminder extends Component {
 	cancel = e => {
 		e.preventDefault();
 		const { monthIndex, dayIndex } = this.props.match.params;
-		console.log({ monthIndex, dayIndex });
 		this.props.history.push(
 			`/month-${monthIndex}/day-${dayIndex}/choosefeature`
 		);
+	};
+
+	addReminder = (e, rootState, events) => {
+		e.preventDefault();
+		const { monthIndex, dayIndex } = this.props.match.params;
+		const { hour, minutes, content } = this.state;
+		const title = `${String(hour).padStart(2, '0')}:${String(minutes).padStart(
+			2,
+			'0'
+		)}`;
+		const activityID = `${
+			rootState.currentDate.year
+		}-${monthIndex}-${dayIndex}`;
+
+		const payload = {
+			type: 'Reminder',
+			title,
+			content,
+			activityID,
+			id: setRandomID('Reminder-')
+		};
+		events.addFeatureItem(payload);
+		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}`);
+		console.log('Reminder was saved!');
 	};
 
 	render() {
@@ -97,29 +119,9 @@ export default class Reminder extends Component {
 									<Button
 										value="Add Reminder"
 										primary={true}
+										disabled={!this.state.content}
 										onClick={e => {
-											e.preventDefault();
-											const { monthIndex, dayIndex } = this.props.match.params;
-											const { hour, minutes, content } = this.state;
-											const title = `${String(hour).padStart(2, '0')}:${String(
-												minutes
-											).padStart(2, '0')}`;
-											const activityID = `${
-												rootState.currentDate.year
-											}-${monthIndex}-${dayIndex}`;
-
-											const payload = {
-												type: 'Reminder',
-												title,
-												content,
-												activityID,
-												id: setRandomID('Reminder-')
-											};
-											events.addFeatureItem(payload);
-											this.props.history.push(
-												`/month-${monthIndex}/day-${dayIndex}`
-											);
-											console.log('Reminder was saved!');
+											this.addReminder(e, rootState, events);
 										}}
 									/>
 								</div>

@@ -18,6 +18,13 @@ const Button = styled.button`
 	&:active {
 		transform: scale(0.95);
 	}
+
+	&[disabled] {
+		opacity: 0.5;
+		&:hover {
+			transform: none;
+		}
+	}
 `;
 
 export default class ButtonComponent extends Component {
@@ -26,6 +33,7 @@ export default class ButtonComponent extends Component {
 			<Button
 				className={this.props.primary ? 'dark-box' : 'default'}
 				onClick={this.props.onClick}
+				disabled={this.props.disabled}
 			>
 				{this.props.value}
 			</Button>
