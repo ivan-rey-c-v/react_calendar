@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { RootContext } from '../../context/RootContext';
+import setRandomID from '../../utils/setRandomID';
 
 import Button from './Button';
 
@@ -73,32 +75,62 @@ export default class Todo extends Component {
 
 	render() {
 		return (
-			<Main>
-				<form action="">
-					<h3>NOTES</h3>
-					<label htmlFor="">
-						Title <small>OPTIONAL</small>
-					</label>
-					<input
-						type="text"
-						value={this.state.title}
-						onChange={this.handleTitleChange}
-					/>
-					<textarea
-						name="notes-content"
-						id="notes-content"
-						cols="30"
-						rows="10"
-						value={this.state.content}
-						onChange={this.handleContentChange}
-					/>
+			<RootContext.Consumer>
+				{({ rootState, events }) => {
+					return (
+						<Main>
+							<form action="">
+								<h3>NOTES</h3>
+								<label htmlFor="">
+									Title <small>OPTIONAL</small>
+								</label>
+								<input
+									type="text"
+									value={this.state.title}
+									onChange={this.handleTitleChange}
+								/>
+								<textarea
+									name="notes-content"
+									id="notes-content"
+									cols="30"
+									rows="10"
+									value={this.state.content}
+									onChange={this.handleContentChange}
+								/>
 
-					<div className="button-div">
-						<Button value="Cancel" onClick={this.cancel} />
-						<Button value="Add Todo" primary={true} />
-					</div>
-				</form>
-			</Main>
+								<div className="button-div">
+									<Button value="Cancel" onClick={this.cancel} />
+									<Button
+										value="Add Todo"
+										primary={true}
+										onClick={e => {
+											e.preventDefault();
+											const { monthIndex, dayIndex } = this.props.match.params;
+											const { title, content } = this.state;
+
+											const activityID = `${
+												rootState.currentDate.year
+											}-${monthIndex}-${dayIndex}`;
+
+											const payload = {
+												title,
+												content,
+												activityID,
+												id: setRandomID('Notes-')
+											};
+											events.addFeatureItem(payload);
+											this.props.history.push(
+												`/month-${monthIndex}/day-${dayIndex}`
+											);
+											console.log('notes was saved!');
+										}}
+									/>
+								</div>
+							</form>
+						</Main>
+					);
+				}}
+			</RootContext.Consumer>
 		);
 	}
 }

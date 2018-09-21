@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { RootContext } from '../../context/RootContext';
+import setRandomID from '../../utils/setRandomID';
 
 import ReminderTime from './ReminderTime';
 import Button from './Button';
@@ -42,8 +44,8 @@ export default class Reminder extends Component {
 		super(props);
 		this.state = {
 			hour: '',
-			minutes: '',
-			content: ''
+			minutes: 1,
+			content: 1
 		};
 	}
 
@@ -70,29 +72,59 @@ export default class Reminder extends Component {
 
 	render() {
 		return (
-			<Main>
-				<form action="">
-					<h3>REMINDER</h3>
-					<div className="time">
-						<ReminderTime limit={24} onChange={this.setNewHour} />
-						<p className="colon">:</p>
-						<ReminderTime limit={60} onChange={this.setNewHour} />
-					</div>
-					<textarea
-						name="reminder-content"
-						id="reminder-content"
-						cols="30"
-						rows="10"
-						value={this.state.content}
-						onChange={this.handleContentChange}
-					/>
+			<RootContext.Consumer>
+				{({ rootState, events }) => {
+					return (
+						<Main>
+							<form action="">
+								<h3>REMINDER</h3>
+								<div className="time">
+									<ReminderTime limit={24} onChange={this.setNewHour} />
+									<p className="colon">:</p>
+									<ReminderTime limit={60} onChange={this.setNewHour} />
+								</div>
+								<textarea
+									name="reminder-content"
+									id="reminder-content"
+									cols="30"
+									rows="10"
+									value={this.state.content}
+									onChange={this.handleContentChange}
+								/>
 
-					<div className="button-div">
-						<Button value="Cancel" onClick={this.cancel} />
-						<Button value="Add Reminder" primary={true} />
-					</div>
-				</form>
-			</Main>
+								<div className="button-div">
+									<Button value="Cancel" onClick={this.cancel} />
+									<Button
+										value="Add Reminder"
+										primary={true}
+										onClick={e => {
+											e.preventDefault();
+											const { monthIndex, dayIndex } = this.props.match.params;
+											const { hour, minutes, content } = this.state;
+											const title = `${hour}:${minutes}`;
+											const activityID = `${
+												rootState.currentDate.year
+											}-${monthIndex}-${dayIndex}`;
+
+											const payload = {
+												title,
+												content,
+												activityID,
+												id: setRandomID('Reminder-')
+											};
+											events.addFeatureItem(payload);
+											this.props.history.push(
+												`/month-${monthIndex}/day-${dayIndex}`
+											);
+											console.log('Reminder was saved!');
+										}}
+									/>
+								</div>
+							</form>
+						</Main>
+					);
+				}}
+			</RootContext.Consumer>
 		);
 	}
 }
