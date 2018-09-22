@@ -45,7 +45,7 @@ export default class Day extends Component {
 							/>
 							<DaySection
 								onClick={this.chooseFeature}
-								activities={activities ? activities : []}
+								activities={activities}
 								updateTodoItemStatus={{
 									activitiesID,
 									event: events.updateTodoItemStatus
