@@ -1,71 +1,58 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import Box from '../../components/Box'
 
-import { elideMonth } from '../../utils/misc';
+import styled from 'styled-components'
 
-const Section = styled.section`
-	> ol {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		grid-auto-rows: 5.5rem;
-		justify-items: center;
-		align-items: center;
+import { elideMonth } from '../../utils/misc'
 
-		font-size: 200%;
-		font-weight: 600;
+const OrderedList = styled.ol`
+	margin-top: 1rem;
 
-		> li {
-			width: 100%;
-			height: 100%;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-auto-rows: 5.5rem;
+	justify-content: center;
+`
+const List = styled.li`
+	height: 100%;
+	width: 100%;
+	font-weight: 900;
+	font-size: 1.4rem;
+	cursor: pointer;
 
-			> a {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				cursor: pointer;
-				width: 100%;
-				height: 100%;
-				> p.dark-box {
-					color: #33cccc;
-				}
-			}
-			&:hover {
-				background-color: paleturquoise;
-			}
-			&:active {
-				transform: scale(0.95);
-			}
-		}
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&:hover {
+		background-color: paleturquoise;
 	}
-`;
-
-export default class YearSection extends Component {
-	render() {
-		return (
-			<Section>
-				<ol>
-					{this.props.monthsList.map((month, index) => (
-						<li key={month}>
-							<Link
-								to={{
-									pathname: `/month-${index}`
-								}}
-							>
-								<p
-									className={
-										this.props.currentMonthIndex === index
-											? 'dark-box blue'
-											: ''
-									}
-								>
-									{elideMonth(month)}
-								</p>
-							</Link>
-						</li>
-					))}
-				</ol>
-			</Section>
-		);
+	&:active {
+		transform: scale(0.95);
 	}
+`
+
+function YearSection(props) {
+	return (
+		<section>
+			<OrderedList>
+				{props.monthsList.map((month, index) => (
+					<List key={month}>
+						<Link to={`month-${index}`}>
+							{props.currentMonthIndex === index ? (
+								<Box>
+									<h2>{elideMonth(month)}</h2>
+								</Box>
+							) : (
+								<h2>{elideMonth(month)}</h2>
+							)}
+						</Link>
+					</List>
+				))}
+			</OrderedList>
+		</section>
+	)
 }
+
+export default React.memo(YearSection)

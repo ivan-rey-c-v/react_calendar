@@ -1,23 +1,29 @@
-import React, { Component } from 'react';
-import { RootContext } from '../../context/RootContext';
+import React, { useContext } from 'react'
+import { RootContext } from '../../context/RootContext'
 
-import YearHeader from './YearHeader';
-import YearSection from './YearSection';
+import YearSection from './YearSection'
 
-export default class Year extends Component {
-	render() {
-		return (
-			<RootContext>
-				{({ rootState }) => (
-					<main>
-						<YearHeader year={rootState.currentDate.year} />
-						<YearSection
-							monthsList={rootState.monthsList}
-							currentMonthIndex={rootState.currentDate.month}
-						/>
-					</main>
-				)}
-			</RootContext>
-		);
-	}
+import Header from '../../components/Header'
+import Box from '../../components/Box'
+
+function Year(props) {
+	const store = useContext(RootContext)
+
+	let year = store.rootState.currentDate.year
+
+	return (
+		<main>
+			<Header>
+				<Box>
+					<h1>{year}</h1>
+				</Box>
+			</Header>
+			<YearSection
+				monthsList={store.rootState.monthsList}
+				currentMonthIndex={store.rootState.currentDate.month}
+			/>
+		</main>
+	)
 }
+
+export default React.memo(Year)
