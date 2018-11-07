@@ -14,12 +14,12 @@ body, h1, h2, h3, h4, h5, h6, p, ol, ul {
 	padding: 0;
 }
 
-html, body, #React-App {
+html, body, #React-App, .routes-wrapper {
 	height: 100%;
 	width: 100%;
 }
 
-#React-App > main {
+.routes-wrapper > main {
 	margin: 0 auto;
 	max-width: 500px;
 }

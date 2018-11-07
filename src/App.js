@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-
-import { RootStore } from './context/RootContext';
-import Router from './router/Router';
+import React, { Component } from 'react'
+import { RootStore } from './context/RootContext'
+import Routes from './Routes'
 
 class App extends Component {
 	render() {
 		return (
 			<RootStore>
-				<Router />
+				<Routes />
 			</RootStore>
-		);
+		)
 	}
 }
 
-export default App;
+export default App
