@@ -1,5 +1,9 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import HeaderNav from '../../components/header/HeaderNav'
+import GoBack from '../../components/header/GoBack'
+import IsABox from '../../components/IsABox'
+
+import styled from 'styled-components'
 
 const Header = styled.header`
 	display: flex;
@@ -30,9 +34,27 @@ const Header = styled.header`
 		font-weight: 600;
 		font-size: 125%;
 	}
-`;
+`
 
-export default class MonthHeader extends Component {
+function MonthHeader(props) {
+	//
+
+	return (
+		<HeaderNav>
+			<GoBack>
+				<p>2018</p>
+			</GoBack>
+
+			<div>
+				<IsABox isABox={props.isCurrentMonth} value={props.monthName} />
+			</div>
+		</HeaderNav>
+	)
+}
+
+export default React.memo(MonthHeader)
+
+class _MonthHeader extends Component {
 	render() {
 		return (
 			<Header>
@@ -40,12 +62,7 @@ export default class MonthHeader extends Component {
 					<p> &lt; </p>
 					<p> {this.props.year} </p>
 				</div>
-				<div>
-					<p className={this.props.isCurrentMonth ? 'dark-box' : 'month-name'}>
-						{this.props.monthName}
-					</p>
-				</div>
 			</Header>
-		);
+		)
 	}
 }

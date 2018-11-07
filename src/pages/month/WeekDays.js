@@ -1,32 +1,28 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
-const Ul = styled.ul`
+const UnorderedList = styled.ul`
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	justify-items: center;
 	align-items: center;
-	height: 2rem;
-	font-size: 80%;
+	height: 3rem;
+	font-size: 1rem;
 	font-weight: 600;
+	color: gray;
 	border-bottom: 2px solid lightgray;
-`;
+`
 
-export default class WeekDays extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			weeks: ['Sun', 'M', 'Tu', 'W', 'Th', 'F', 'Sat']
-		};
-	}
+function WeekDays(props) {
+	const weeks = ['Sun', 'M', 'Tu', 'W', 'Th', 'F', 'Sat']
 
-	render() {
-		return (
-			<Ul>
-				{this.state.weeks.map(day => {
-					return <li key={day}>{day}</li>;
-				})}
-			</Ul>
-		);
-	}
+	return (
+		<UnorderedList>
+			{weeks.map(day => (
+				<li key={day}>{day}</li>
+			))}
+		</UnorderedList>
+	)
 }
+
+export default React.memo(WeekDays)

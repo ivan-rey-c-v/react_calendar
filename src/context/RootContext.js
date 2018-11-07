@@ -8,6 +8,10 @@ function reducer(state, action) {
 		case '': {
 			return //
 		}
+
+		default: {
+			return state
+		}
 	}
 }
 

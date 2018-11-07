@@ -3,7 +3,7 @@ import { RootContext } from '../../context/RootContext'
 
 import YearSection from './YearSection'
 
-import Header from '../../components/Header'
+import Header from '../../components/header/Header'
 import Box from '../../components/Box'
 
 function Year(props) {

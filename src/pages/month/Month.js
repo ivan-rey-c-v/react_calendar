@@ -1,53 +1,63 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { RootContext } from '../../context/RootContext';
-import createDaysArray from '../../utils/createDaysArray';
-import getStartOfMonth from '../../utils/getStartOfMonth';
+import React, { useContext } from 'react'
+import { RootContext } from '../../context/RootContext'
+import createDaysArray from '../../utils/createDaysArray'
+import getStartOfMonth from '../../utils/getStartOfMonth'
+import { navigate } from '@reach/router'
 
-import MonthHeader from './MonthHeader';
-import WeekDays from './WeekDays';
-import MonthSection from './MonthSection';
+import MonthHeader from './MonthHeader'
+import WeekDays from './WeekDays'
+import MonthSection from './MonthSection'
 
-const Main = styled.main``;
+import HeaderNav from '../../components/header/HeaderNav'
 
-export default class Month extends Component {
-	goToYear = () => {
-		this.props.history.push('/year');
-	};
+console.log('This is in the month page module.')
+function Month(props) {
+	const store = useContext(RootContext)
 
-	render() {
-		return (
-			<RootContext>
-				{({ rootState }) => {
-					const { month, year, day } = rootState.currentDate;
-					const { monthIndex } = this.props.match.params;
-					const isCurrentMonth = month === Number(monthIndex);
-					const monthName = rootState.monthsList[monthIndex];
-					const daysArray = createDaysArray(year, monthIndex);
+	const { month, year, day } = store.rootState.currentDate
+	const monthIndex = props.monthID
+	const isCurrentMonth = month === Number(monthIndex)
+	const monthName = store.rootState.monthsList[monthIndex]
+	const daysArray = createDaysArray(year, monthIndex)
+	const dayOfMonth = isCurrentMonth && day
+	const startOfMonth = getStartOfMonth(year, monthIndex)
 
-					const dayOfMonth = isCurrentMonth && day;
-
-					const startOfMonth = getStartOfMonth(year, monthIndex);
-
-					return (
-						<Main>
-							<MonthHeader
-								monthName={monthName}
-								isCurrentMonth={isCurrentMonth}
-								year={year}
-								onClick={this.goToYear}
-							/>
-							<WeekDays />
-							<MonthSection
-								daysArray={daysArray}
-								dayOfMonth={dayOfMonth}
-								monthIndex={monthIndex}
-								startOfMonth={startOfMonth}
-							/>
-						</Main>
-					);
-				}}
-			</RootContext>
-		);
+	const goToYear = e => {
+		navigate('/')
 	}
+	console.log({
+		props,
+		startOfMonth,
+		dayOfMonth,
+		daysArray,
+		monthName,
+		isCurrentMonth,
+		monthIndex
+	})
+
+	return (
+		<main>
+			{false && (
+				<HeaderNav>
+					<p>{year}</p>
+				</HeaderNav>
+			)}
+
+			<MonthHeader
+				monthName={monthName}
+				isCurrentMonth={isCurrentMonth}
+				year={year}
+				onClick={goToYear}
+			/>
+			<WeekDays />
+			<MonthSection
+				daysArray={daysArray}
+				dayOfMonth={dayOfMonth}
+				monthIndex={monthIndex}
+				startOfMonth={startOfMonth}
+			/>
+		</main>
+	)
 }
+
+export default Month
