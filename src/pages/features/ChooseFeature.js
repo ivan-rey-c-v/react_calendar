@@ -1,73 +1,57 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import Button from './Button'
+import FormLayout from '../../layouts/FormLayout'
 
-import Button from './Button';
+import styled from 'styled-components'
 
-const Main = styled.main`
+const Wrapper = styled.div`
+	width: 90%;
+	max-width: 450px;
+	padding: 1.5rem 1rem 0 1rem;
+	background-color: white;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`
+const UnorderedList = styled.ul`
+	font-size: 150%;
+	font-weight: 600;
+	color: white;
+	background-color: #5e4f63;
+	cursor: pointer;
+`
+const List = styled.li`
+	padding: 1.5rem;
+	text-align: center;
+	&:hover {
+		background-color: #33cccc;
+		color: black;
+	}
+	&:active {
+		transform: scale(0.95);
+	}
+`
+const ButtonWrapper = styled.div`
+	padding-top: 1.5rem;
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	min-height: 350px;
-	max-height: 700px;
+`
 
-	> div {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	& ul {
-		width: 90%;
-		font-size: 150%;
-		font-weight: 600;
-		color: white;
-		background-color: black;
-		cursor: pointer;
-		> li {
-			width: 100%;
-			padding: 1.5rem;
-			text-align: center;
-			&:hover {
-				background-color: #33cccc;
-				color: black;
-			}
-			&:active {
-				transform: scale(0.95);
-			}
-		}
-	}
+function ChooseFeature(props) {
+	return (
+		<FormLayout>
+			<UnorderedList onClick={props.handleChooseFeature}>
+				<List>Reminder</List>
+				<List>Todo</List>
+				<List>Notes</List>
+			</UnorderedList>
 
-	& button {
-		margin-top: 2rem;
-		margin-left: 10%;
-		align-self: flex-start;
-	}
-`;
-
-export default class ChooseFeature extends Component {
-	goToDay = () => {
-		const { monthIndex, dayIndex } = this.props.match.params;
-		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}`);
-	};
-
-	goToFeature = e => {
-		const feature = e.target.textContent.toLowerCase();
-		const { monthIndex, dayIndex } = this.props.match.params;
-		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}/${feature}`);
-	};
-
-	render() {
-		return (
-			<Main>
-				<div>
-					<ul onClick={this.goToFeature}>
-						<li>Reminder</li>
-						<li>Todo</li>
-						<li>Notes</li>
-					</ul>
-					<Button value="Close" onClick={this.goToDay} />
-				</div>
-			</Main>
-		);
-	}
+			<ButtonWrapper>
+				<Button value="Close" onClick={props.closeModal} />
+			</ButtonWrapper>
+		</FormLayout>
+	)
 }
+
+export default React.memo(ChooseFeature)

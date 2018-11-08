@@ -1,42 +1,48 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import styled from 'styled-components'
 
 const Button = styled.button`
 	padding: 0.25rem 0.75rem;
-	font-size: 110%;
+	font-size: 1.1rem;
 	font-weight: 600;
-	border: none;
+	border: 1px solid #304e7f;
 	cursor: pointer;
-	box-shadow: 1px 1px 4px gray;
+	box-shadow: 2px 2px gray;
+	color: #304e7f;
+	background-color: transparent;
 
-	&.default {
-		background-color: #cccccc;
-	}
-	&:hover {
-		transform: translateY(-1px);
-	}
-	&:active {
-		transform: scale(0.95);
+	&:not([disabled]) {
+		&:hover {
+			transform: translateY(-1px);
+		}
+		&:active {
+			transform: scale(0.95);
+		}
 	}
 
 	&[disabled] {
 		opacity: 0.5;
-		&:hover {
-			transform: none;
+	}
+
+	&.primary {
+		color: white;
+		background-color: #1d3254;
+
+		&:not([disabled]) {
+			&:hover {
+				transform: translateY(-1px);
+				opacity: 0.9;
+			}
 		}
 	}
-`;
+`
 
-export default class ButtonComponent extends Component {
-	render() {
-		return (
-			<Button
-				className={this.props.primary ? 'dark-box' : 'default'}
-				onClick={this.props.onClick}
-				disabled={this.props.disabled}
-			>
-				{this.props.value}
-			</Button>
-		);
-	}
+function ButtonComponent(props) {
+	return (
+		<Button {...props} className={props.primary ? 'primary' : 'default'}>
+			{props.value}
+		</Button>
+	)
 }
+
+export default React.memo(ButtonComponent)

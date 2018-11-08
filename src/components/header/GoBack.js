@@ -1,40 +1,50 @@
 import React from 'react'
-import { navigate } from '@reach/router'
+import { Link } from '@reach/router'
 import { ReactComponent as ArrowLeft } from '../../assets/icons/arrowleft.svg'
 
 import styled from 'styled-components'
 
 const Div = styled.div`
 	cursor: pointer;
-	&:hover {
-		background-color: lightseagreen;
-	}
-	&:active {
-		transform: translateX(-2px);
-	}
-
 	display: flex;
 	align-items: center;
+
+	.content {
+		display: flex;
+		align-items: center;
+
+		> * {
+			margin-right: 0.5rem;
+		}
+	}
+`
+
+const ArrowWrapper = styled.span`
+	padding: 0.1rem 0.5rem;
+	margin-right: 0.5rem;
+
+	&:hover {
+		background-color: #e8f4f4;
+	}
+	&:active {
+		transform: translateX(-5px);
+	}
 `
 
 const StyledArrow = styled(ArrowLeft)`
 	height: 1.5rem;
 	width: 1.5rem;
 	fill: darkviolet;
-	margin-right: 0.5rem;
 `
 
 const GoBack = props => {
-	const handleGoBack = e => {
-		navigate('../')
-	}
-
 	return (
-		<Div onClick={handleGoBack}>
-			<span>
+		<Div>
+			<ArrowWrapper as={Link} to={props.to}>
 				<StyledArrow />
-			</span>
-			{props.children}
+			</ArrowWrapper>
+
+			<span className="content">{props.children}</span>
 		</Div>
 	)
 }

@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { RootContext } from '../../context/RootContext';
-import setRandomID from '../../utils/setRandomID';
+import React, { Component } from 'react'
+import { RootContext } from '../../context/RootContext'
+import setRandomID from '../../utils/setRandomID'
 
-import Button from './Button';
+import Button from './Button'
+import TitleInput from './TitleInput'
+import FormLayout from '../../layouts/FormLayout'
+import HeaderField from '../../layouts/HeaderField'
+import ActionsField from '../../layouts/ActionsField'
 
+import styled from 'styled-components'
 const Main = styled.main`
 	> form {
 		margin-top: 1rem;
@@ -58,151 +62,218 @@ const Main = styled.main`
 		display: flex;
 		justify-content: space-between;
 	}
-`;
+`
+const TodosField = styled.div`
+	width: 100%;
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	background-color: red;
 
-export default class Todo extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			title: '',
-			todos: []
-		};
+	> input {
+		border: none;
+		border-bottom: 2px solid lightgray;
+		padding: 0.25rem 0.5rem;
+		font-size: 1rem;
 	}
+`
 
-	addTodoItem = e => {
-		const value = e.target.value;
-		const id = e.target.getAttribute('id');
+function Todo(props) {
+	return (
+		<FormLayout>
+			<HeaderField>
+				<h3>TODO</h3>
+			</HeaderField>
 
-		const todosObject = this.state.todos.reduce(
-			(accum, todo) => {
-				if (todo.id === '') {
-					todo.id = setRandomID('todo-item-');
-					todo.text = value;
-					accum.todos.push(todo);
-					accum.existingInput = true;
-					return accum;
-				}
+			<TitleInput />
 
-				if (todo.id === id) {
-					todo.text = value;
-					accum.todos.push(todo);
-					accum.existingInput = true;
-					return accum;
-				} else if (todo.text === '') {
-					return accum;
-				} else {
-					accum.todos.push(todo);
-					return accum;
-				}
-			},
-			{
-				existingInput: false,
-				todos: []
-			}
-		);
-
-		this.setState({
-			todos: todosObject.existingInput
-				? todosObject.todos
-				: [
-						...todosObject.todos,
-						{
-							id: setRandomID('todo-item-'),
-							done: false,
-							text: value
-						}
-				  ]
-		});
-	};
-
-	cancel = e => {
-		e.preventDefault();
-		const { monthIndex, dayIndex } = this.props.match.params;
-		this.props.history.push(
-			`/month-${monthIndex}/day-${dayIndex}/choosefeature`
-		);
-	};
-
-	handleTitleChange = e => {
-		const title = e.target.value;
-		this.setState({ title });
-	};
-
-	handleContentChange = e => {
-		const content = e.target.value;
-		this.setState({ content });
-	};
-
-	addTodos = (e, rootState, events) => {
-		e.preventDefault();
-		const { monthIndex, dayIndex } = this.props.match.params;
-		const { title, todos } = this.state;
-		const activityID = `${
-			rootState.currentDate.year
-		}-${monthIndex}-${dayIndex}`;
-
-		const payload = {
-			type: 'Todo',
-			title,
-			todos,
-			activityID,
-			content: '',
-			id: setRandomID('Todo-')
-		};
-		events.addFeatureItem(payload);
-		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}`);
-		console.log('Todo was saved!');
-	};
-
-	render() {
-		return (
-			<RootContext.Consumer>
-				{({ rootState, events }) => {
+			<TodosField>
+				{[{}, {}].map((todo, index) => {
 					return (
-						<Main>
-							<form action="">
-								<h3>TODO</h3>
-								<label htmlFor="">
-									Title <small>OPTIONAL</small>
-								</label>
-								<input
-									type="text"
-									value={this.state.title}
-									onChange={this.handleTitleChange}
-								/>
+						<input
+							key={index}
+							type="text"
+							value={todo.text}
+							id={todo.id}
+						/>
+					)
+				})}
+			</TodosField>
 
-								<div className="todos">
-									{[...this.state.todos, {}].map((todo, index) => {
-										return (
-											<input
-												key={index}
-												type="text"
-												value={todo.text}
-												id={todo.id}
-												onChange={this.addTodoItem}
-											/>
-										);
-									})}
-								</div>
-
-								<div className="button-div">
-									<Button value="Cancel" onClick={this.cancel} />
-									<Button
-										value="Add Todo"
-										primary={true}
-										onClick={e => {
-											this.addTodos(e, rootState, events);
-										}}
-										disabled={
-											!this.state.todos.filter(v => v.text !== '').length > 0
-										}
-									/>
-								</div>
-							</form>
-						</Main>
-					);
-				}}
-			</RootContext.Consumer>
-		);
-	}
+			<ActionsField>
+				<Button
+					value="Cancel"
+					// onClick={this.cancel}
+				/>
+				<Button
+					value="Add Todo"
+					primary={true}
+					// onClick={e => {
+					// 	this.addTodos(e, rootState, events)
+					// }}
+					// disabled={
+					// 	!this.state.todos.filter(
+					// 		v => v.text !== ''
+					// 	).length > 0
+					// }
+				/>
+			</ActionsField>
+		</FormLayout>
+	)
 }
+
+export default React.memo(Todo)
+
+// export default class Todo extends Component {
+// 	constructor(props) {
+// 		super(props)
+// 		this.state = {
+// 			title: '',
+// 			todos: []
+// 		}
+// 	}
+
+// 	addTodoItem = e => {
+// 		const value = e.target.value
+// 		const id = e.target.getAttribute('id')
+
+// 		const todosObject = this.state.todos.reduce(
+// 			(accum, todo) => {
+// 				if (todo.id === '') {
+// 					todo.id = setRandomID('todo-item-')
+// 					todo.text = value
+// 					accum.todos.push(todo)
+// 					accum.existingInput = true
+// 					return accum
+// 				}
+
+// 				if (todo.id === id) {
+// 					todo.text = value
+// 					accum.todos.push(todo)
+// 					accum.existingInput = true
+// 					return accum
+// 				} else if (todo.text === '') {
+// 					return accum
+// 				} else {
+// 					accum.todos.push(todo)
+// 					return accum
+// 				}
+// 			},
+// 			{
+// 				existingInput: false,
+// 				todos: []
+// 			}
+// 		)
+
+// 		this.setState({
+// 			todos: todosObject.existingInput
+// 				? todosObject.todos
+// 				: [
+// 						...todosObject.todos,
+// 						{
+// 							id: setRandomID('todo-item-'),
+// 							done: false,
+// 							text: value
+// 						}
+// 				  ]
+// 		})
+// 	}
+
+// 	cancel = e => {
+// 		e.preventDefault()
+// 		const { monthIndex, dayIndex } = this.props.match.params
+// 		this.props.history.push(
+// 			`/month-${monthIndex}/day-${dayIndex}/choosefeature`
+// 		)
+// 	}
+
+// 	handleTitleChange = e => {
+// 		const title = e.target.value
+// 		this.setState({ title })
+// 	}
+
+// 	handleContentChange = e => {
+// 		const content = e.target.value
+// 		this.setState({ content })
+// 	}
+
+// 	addTodos = (e, rootState, events) => {
+// 		e.preventDefault()
+// 		const { monthIndex, dayIndex } = this.props.match.params
+// 		const { title, todos } = this.state
+// 		const activityID = `${
+// 			rootState.currentDate.year
+// 		}-${monthIndex}-${dayIndex}`
+
+// 		const payload = {
+// 			type: 'Todo',
+// 			title,
+// 			todos,
+// 			activityID,
+// 			content: '',
+// 			id: setRandomID('Todo-')
+// 		}
+// 		events.addFeatureItem(payload)
+// 		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}`)
+// 		console.log('Todo was saved!')
+// 	}
+
+// 	render() {
+// 		return (
+// 			<RootContext.Consumer>
+// 				{({ rootState, events }) => {
+// 					return (
+// 						<Main>
+// 							<form action="">
+// 								<h3>TODO</h3>
+// 								<label htmlFor="">
+// 									Title <small>OPTIONAL</small>
+// 								</label>
+// 								<input
+// 									type="text"
+// 									value={this.state.title}
+// 									onChange={this.handleTitleChange}
+// 								/>
+
+// 								<div className="todos">
+// 									{[...this.state.todos, {}].map(
+// 										(todo, index) => {
+// 											return (
+// 												<input
+// 													key={index}
+// 													type="text"
+// 													value={todo.text}
+// 													id={todo.id}
+// 													onChange={this.addTodoItem}
+// 												/>
+// 											)
+// 										}
+// 									)}
+// 								</div>
+
+// 								<div className="button-div">
+// 									<Button
+// 										value="Cancel"
+// 										onClick={this.cancel}
+// 									/>
+// 									<Button
+// 										value="Add Todo"
+// 										primary={true}
+// 										onClick={e => {
+// 											this.addTodos(e, rootState, events)
+// 										}}
+// 										disabled={
+// 											!this.state.todos.filter(
+// 												v => v.text !== ''
+// 											).length > 0
+// 										}
+// 									/>
+// 								</div>
+// 							</form>
+// 						</Main>
+// 					)
+// 				}}
+// 			</RootContext.Consumer>
+// 		)
+// 	}
+// }

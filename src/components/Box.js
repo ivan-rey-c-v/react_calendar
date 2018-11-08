@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
-	padding: 0.25rem 0.75rem;
+	padding: 0.15rem 0.5rem;
 	color: var(--color-box-foreground);
 	background-color: var(--color-box);
 	font-weight: 600;
