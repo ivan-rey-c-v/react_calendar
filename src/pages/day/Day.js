@@ -1,61 +1,53 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { useContext, useState, useCallback } from 'react'
 
-import { RootContext } from '../../context/RootContext';
-import DayHeader from './DayHeader';
-import DaySection from './DaySection';
+import { RootContext } from '../../context/RootContext'
+import DayHeader from './DayHeader'
+import DaySection from './DaySection'
+import Modal from '../features/Modal'
 
-const Main = styled.main``;
+function Day(props) {
+	const store = useContext(RootContext)
 
-export default class Day extends Component {
-	goToMonth = () => {
-		this.props.history.push(`/month-${this.props.match.params.monthIndex}`);
-	};
+	const { monthID: monthIndex, dayID: dayIndex } = props
+	const { year, month, day } = store.rootState.currentDate
+	const monthName = store.rootState.monthsList[monthIndex]
 
-	chooseFeature = () => {
-		const { monthIndex, dayIndex } = this.props.match.params;
-		this.props.history.push(
-			`/month-${monthIndex}/day-${dayIndex}/choosefeature`
-		);
-	};
+	const isCurrentMonth = month === Number(monthIndex)
+	const dayOfMonth = isCurrentMonth && day === Number(dayIndex)
 
-	render() {
-		return (
-			<RootContext>
-				{({ rootState, events }) => {
-					const { monthIndex, dayIndex } = this.props.match.params;
-					const { year, month, day } = rootState.currentDate;
-					const monthName = rootState.monthsList[monthIndex];
+	const activitiesID = `${year}-${monthIndex}-${dayIndex}`
+	const activities = store.rootState.activities[activitiesID]
 
-					const isCurrentMonth = month === Number(monthIndex);
-					const dayOfMonth = isCurrentMonth && day;
+	const [isModalOpen, setIsModalOpen] = useState(false)
+	const toggleModal = useCallback(() => {
+		setIsModalOpen(!isModalOpen)
+	})
 
-					const activitiesID = `${year}-${monthIndex}-${dayIndex}`;
-					const activities = rootState.activities[activitiesID];
+	console.log({ dayOfMonth, isCurrentMonth, day, dayIndex })
 
-					return (
-						<Main>
-							<DayHeader
-								year={year}
-								monthName={monthName}
-								isCurrentMonth={isCurrentMonth}
-								dayOfMonth={dayOfMonth}
-								dayIndex={Number(dayIndex)}
-								onClick={this.goToMonth}
-							/>
-							<DaySection
-								onClick={this.chooseFeature}
-								activities={activities}
-								updateTodoItemStatus={{
-									activitiesID,
-									event: events.updateTodoItemStatus
-								}}
-								removeActivity={events.removeActivity}
-							/>
-						</Main>
-					);
+	return (
+		<main>
+			<DayHeader
+				year={year}
+				monthName={monthName}
+				isCurrentMonth={isCurrentMonth}
+				dayOfMonth={dayOfMonth}
+				dayIndex={Number(dayIndex)}
+				monthIndex={monthIndex}
+				openModal={toggleModal}
+			/>
+			<DaySection
+				activities={activities}
+				updateTodoItemStatus={{
+					activitiesID,
+					event: store.events.updateTodoItemStatus
 				}}
-			</RootContext>
-		);
-	}
+				removeActivity={store.events.removeActivity}
+			/>
+
+			{isModalOpen && <Modal toggleModal={toggleModal} />}
+		</main>
+	)
 }
+
+export default React.memo(Day)

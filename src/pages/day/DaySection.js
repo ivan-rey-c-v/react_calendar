@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
-import AddButton from './AddButton';
-import Activity from './Activity';
+import Activity from './Activity'
 
 const Section = styled.section`
 	width: 100%;
@@ -23,28 +22,29 @@ const Section = styled.section`
 		text-align: center;
 		color: lightgray;
 	}
-`;
+`
 
-export default class DaySection extends Component {
-	render() {
-		return (
-			<Section>
-				<div className="activities">
-					{this.props.activities ? (
-						this.props.activities.map(activity => (
-							<Activity
-								activity={activity}
-								key={activity.id}
-								updateTodoItemStatus={this.props.updateTodoItemStatus}
-								removeActivity={this.props.removeActivity}
-							/>
-						))
-					) : (
-						<span className="empty">You have NO activities at this date.</span>
-					)}
-				</div>
-				<AddButton onClick={this.props.onClick} />
-			</Section>
-		);
-	}
+function DaySection(props) {
+	return (
+		<Section>
+			<div className="activities">
+				{props.activities ? (
+					props.activities.map(activity => (
+						<Activity
+							activity={activity}
+							key={activity.id}
+							updateTodoItemStatus={props.updateTodoItemStatus}
+							removeActivity={props.removeActivity}
+						/>
+					))
+				) : (
+					<span className="empty">
+						You have NO activities at this date.
+					</span>
+				)}
+			</div>
+		</Section>
+	)
 }
+
+export default React.memo(DaySection)
