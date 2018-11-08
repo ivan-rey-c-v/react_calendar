@@ -4,16 +4,6 @@ import FormLayout from '../../layouts/FormLayout'
 
 import styled from 'styled-components'
 
-const Wrapper = styled.div`
-	width: 90%;
-	max-width: 450px;
-	padding: 1.5rem 1rem 0 1rem;
-	background-color: white;
-
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-`
 const UnorderedList = styled.ul`
 	font-size: 150%;
 	font-weight: 600;

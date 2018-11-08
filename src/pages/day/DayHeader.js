@@ -7,10 +7,10 @@ import AddButton from './AddButton'
 function DayHeader(props) {
 	return (
 		<HeaderNav>
-			<GoBack to={`/month/${props.monthIndex}`}>
+			<GoBack to={`/month/${props.monthID}`}>
 				<p>{props.year}</p>
 				<IsABox isABox={props.isCurrentMonth} value={props.monthName} />
-				<IsABox isABox={props.dayOfMonth} value={props.dayIndex} />
+				<IsABox isABox={props.dayOfMonth} value={props.dayID} />
 			</GoBack>
 
 			<div onClick={props.openModal}>

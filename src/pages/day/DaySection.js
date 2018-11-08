@@ -32,9 +32,8 @@ function DaySection(props) {
 					props.activities.map(activity => (
 						<Activity
 							activity={activity}
+							activitiesID={props.activitiesID}
 							key={activity.id}
-							updateTodoItemStatus={props.updateTodoItemStatus}
-							removeActivity={props.removeActivity}
 						/>
 					))
 				) : (
@@ -47,4 +46,5 @@ function DaySection(props) {
 	)
 }
 
-export default React.memo(DaySection)
+// React.memo does recognize changes in prop.activities
+export default DaySection

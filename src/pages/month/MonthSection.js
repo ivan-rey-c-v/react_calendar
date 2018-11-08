@@ -41,14 +41,14 @@ const List = styled.li`
 `
 
 function MonthSection(props) {
-	const { daysArray, startOfMonth, dayOfMonth, monthIndex } = props
+	const { daysArray, startOfMonth, dayOfMonth, monthID } = props
 
 	return (
 		<section>
 			<OrderedList>
 				{daysArray.map(day => (
 					<List key={day} start={day === 1 ? startOfMonth : null}>
-						<Link to={`/month/${monthIndex}/day/${day}`}>
+						<Link to={`/month/${monthID}/day/${day}`}>
 							<code>
 								{
 									<IsABox

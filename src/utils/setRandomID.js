@@ -1,16 +1,14 @@
-import setRandomNumber from './setRandomNumber';
+import setRandomNumber from './setRandomNumber'
 
 export default function setRandomID(name) {
-	let limit = setRandomNumber(0, 3);
-	let numberContainer = [];
-	let stringContainer = [];
+	let limit = setRandomNumber(0, 3)
+	let numbers = []
 
 	for (let i = 0; i <= limit; i++) {
-		let magicNumber = setRandomNumber(0, 99);
-		numberContainer.push(magicNumber);
-		let string = String.fromCodePoint(magicNumber);
-		stringContainer.push(string);
+		// 32 - 126 codepoints has one/two char length
+		let magicNumber = setRandomNumber(32, 126)
+		numbers.push(magicNumber)
 	}
 
-	return [name, ...numberContainer, ...stringContainer].join('');
+	return `${name}-${numbers.join()}-${String.fromCodePoint(...numbers)}`
 }

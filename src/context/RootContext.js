@@ -1,19 +1,8 @@
-import React, { Component, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import getNewDate from '../utils/getNewDate'
+import { getStateFromStorage, setStateToStorage } from '../utils/localStorage'
 
 export const RootContext = React.createContext()
-
-function reducer(state, action) {
-	switch (action.type) {
-		case '': {
-			return //
-		}
-
-		default: {
-			return state
-		}
-	}
-}
 
 const initialState = {
 	monthsList: [
@@ -29,11 +18,164 @@ const initialState = {
 		'October',
 		'November',
 		'December'
-	]
+	],
+	currentDate: {},
+	activities: {}
 }
 
-function _RootStore(props) {
-	const [state, dispatch] = useReducer(reducer, initialState)
+function _reducer(state, action) {
+	switch (action.type) {
+		case 'SET_NEWDATE': {
+			let currentDate = getNewDate()
+			return { ...state, currentDate }
+		}
+
+		case 'ADD_ACTIVITY': {
+			const { activityDateID, activity } = action
+			const activityList = state.activities[activityDateID]
+				? state.activities[activityDateID]
+				: []
+
+			activityList.push(activity)
+
+			return {
+				...state,
+				activities: {
+					...state.activities,
+					[activityDateID]: activityList
+				}
+			}
+		}
+
+		case 'REMOVE_ACTIVITY': {
+			const { activitiesID, activityID } = action
+			const activities = state.activities[activitiesID].filter(
+				activity => activity.id !== activityID
+			)
+
+			return {
+				...state,
+				activities: {
+					[activitiesID]: activities
+				}
+			}
+		}
+
+		case 'TOGGLE_TODO_ITEM': {
+			const { activitiesID, activityID, todoID } = action
+
+			const prevActivities = state.activities[activitiesID]
+			const activities = prevActivities.map(activity => {
+				if (activity.id === activityID) {
+					activity.todos = activity.todos.map(todo => {
+						if (todo.id === todoID) {
+							todo.isDone = !todo.isDone
+							return todo
+						} else return todo
+					})
+
+					return activity
+				}
+
+				return activity
+			})
+
+			return {
+				...state,
+				activities: {
+					[activitiesID]: activities
+				}
+			}
+		}
+
+		default: {
+			return state
+		}
+	}
+}
+
+function reducer(state, action) {
+	/*	use if statement instead of switch statement
+	 *	since saving to localStorage is necessary in all cases
+	 *		and have it in one place -> the last part of the function itself
+	*/
+
+	let newState = state
+
+	if (action.type === 'SET_NEWDATE') {
+		let currentDate = getNewDate()
+		newState = { ...state, currentDate }
+	}
+
+	if (action.type === 'ADD_ACTIVITY') {
+		const { activityDateID, activity } = action
+		const activityList = state.activities[activityDateID]
+			? state.activities[activityDateID]
+			: []
+
+		activityList.push(activity)
+
+		newState = {
+			...state,
+			activities: {
+				...state.activities,
+				[activityDateID]: activityList
+			}
+		}
+	}
+
+	if (action.type === 'REMOVE_ACTIVITY') {
+		const { activitiesID, activityID } = action
+		const activities = state.activities[activitiesID].filter(
+			activity => activity.id !== activityID
+		)
+
+		newState = {
+			...state,
+			activities: {
+				[activitiesID]: activities
+			}
+		}
+	}
+
+	if (action.type === 'TOGGLE_TODO_ITEM') {
+		const { activitiesID, activityID, todoID } = action
+
+		const prevActivities = state.activities[activitiesID]
+		const activities = prevActivities.map(activity => {
+			if (activity.id === activityID) {
+				activity.todos = activity.todos.map(todo => {
+					if (todo.id === todoID) {
+						todo.isDone = !todo.isDone
+						return todo
+					} else return todo
+				})
+
+				return activity
+			}
+
+			return activity
+		})
+
+		newState = {
+			...state,
+			activities: {
+				[activitiesID]: activities
+			}
+		}
+	}
+
+	setStateToStorage(newState)
+	return newState
+}
+
+export function RootStore(props) {
+	const stateFromStorage = getStateFromStorage()
+	let defaultState = stateFromStorage ? stateFromStorage : initialState
+
+	const [state, dispatch] = useReducer(reducer, defaultState, {
+		type: 'SET_NEWDATE'
+	})
 
 	const value = {
 		state,
@@ -44,140 +186,4 @@ function _RootStore(props) {
 			{props.children}
 		</RootContext.Provider>
 	)
-}
-
-export class RootStore extends Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			activities: {},
-			currentDate: {},
-			monthsList: [
-				'January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December'
-			]
-		}
-	}
-
-	componentWillMount() {
-		// const currentDate = getNewDate();
-		// this.setState({ currentDate });
-		this.setNewDate()
-		const stateFromStorage = this.getStateFromLocalStorage()
-		if (stateFromStorage) {
-			this.setState(stateFromStorage)
-		}
-	}
-
-	componentDidUpdate() {
-		this.saveStateToLocalStorage()
-	}
-
-	saveStateToLocalStorage = () => {
-		const JSONState = JSON.stringify(this.state)
-		const appName = 'react_calendar_simple_example'
-		console.log('saving state to localstorage')
-		window.localStorage.setItem(appName, JSONState)
-	}
-
-	getStateFromLocalStorage = () => {
-		const appName = 'react_calendar_simple_example'
-		const JSONState = window.localStorage.getItem(appName)
-		console.log(
-			`getting state from localstorage.... project-name: ${appName}`
-		)
-		return JSON.parse(JSONState)
-	}
-
-	setNewDate = () => {
-		const currentDate = getNewDate()
-		this.setState({ currentDate })
-	}
-
-	addFeatureItem = payload => {
-		const { activityID } = payload
-		const activityList = this.state.activities[activityID]
-			? this.state.activities[activityID]
-			: []
-
-		const updatedActivityList = [...activityList, payload]
-
-		this.setState(prevState => {
-			return {
-				activities: {
-					...prevState.activities,
-					[activityID]: updatedActivityList
-				}
-			}
-		})
-	}
-
-	updateTodoItemStatus = (activitiesID, todoID, itemID) => {
-		this.setState(prevState => {
-			const activities = prevState.activities[activitiesID]
-			const updatedActivities = activities.map(activity => {
-				if (activity.id === todoID) {
-					const updatedTodos = activity.todos.map(todo => {
-						if (todo.id === itemID) {
-							todo.done = !todo.done
-							return todo
-						} else return todo
-					})
-
-					activity.todos = updatedTodos
-					return activity
-				} else return activity
-			})
-
-			return {
-				activities: {
-					...prevState.activities,
-					[activitiesID]: updatedActivities
-				}
-			}
-		})
-	}
-
-	removeActivity = (activitiesID, activityID) => {
-		this.setState(prevState => {
-			const newActivities = prevState.activities[activitiesID].filter(
-				activity => activity.id !== activityID
-			)
-
-			return {
-				activities: {
-					...prevState.activities,
-					[activitiesID]: newActivities
-				}
-			}
-		})
-	}
-
-	render() {
-		return (
-			<RootContext.Provider
-				value={{
-					rootState: this.state,
-					setRootState: this.setState.bind(this),
-					events: {
-						addFeatureItem: this.addFeatureItem,
-						removeActivity: this.removeActivity,
-						updateTodoItemStatus: this.updateTodoItemStatus
-					}
-				}}
-			>
-				{this.props.children}
-			</RootContext.Provider>
-		)
-	}
 }

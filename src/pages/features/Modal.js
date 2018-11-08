@@ -10,7 +10,6 @@ const Modal = props => {
 
 	const handleChooseFeature = useCallback(e => {
 		const featName = e.target.textContent
-		console.log({ featName })
 		setChosenFeature(featName)
 	})
 
@@ -18,14 +17,31 @@ const Modal = props => {
 		<Overlay>
 			{chosenFeature === 'ChooseFeature' && (
 				<ChooseFeature
-					handleChooseFeature={handleChooseFeature}
 					closeModal={props.toggleModal}
 					handleChooseFeature={handleChooseFeature}
 				/>
 			)}
-			{chosenFeature === 'Notes' && <Notes />}
-			{chosenFeature === 'Reminder' && <Reminder />}
-			{chosenFeature === 'Todo' && <Todo />}
+			{chosenFeature === 'Notes' && (
+				<Notes
+					closeModal={props.toggleModal}
+					dayID={props.dayID}
+					monthID={props.monthID}
+				/>
+			)}
+			{chosenFeature === 'Reminder' && (
+				<Reminder
+					closeModal={props.toggleModal}
+					dayID={props.dayID}
+					monthID={props.monthID}
+				/>
+			)}
+			{chosenFeature === 'Todo' && (
+				<Todo
+					closeModal={props.toggleModal}
+					dayID={props.dayID}
+					monthID={props.monthID}
+				/>
+			)}
 		</Overlay>
 	)
 }

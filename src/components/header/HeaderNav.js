@@ -9,7 +9,7 @@ const Nav = styled.nav`
 	justify-content: space-between;
 	align-items: center;
 
-	font-size: 1.25rem;
+	font-size: 1rem;
 	font-weight: 600;
 `
 

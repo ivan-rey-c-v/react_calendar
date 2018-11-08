@@ -13,7 +13,7 @@ const Form = styled.form`
 `
 
 const FormLayout = props => {
-	return <Form>{props.children}</Form>
+	return <Form {...props}>{props.children}</Form>
 }
 
 export default React.memo(FormLayout)

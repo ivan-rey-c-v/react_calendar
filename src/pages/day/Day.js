@@ -7,23 +7,22 @@ import Modal from '../features/Modal'
 
 function Day(props) {
 	const store = useContext(RootContext)
-
-	const { monthID: monthIndex, dayID: dayIndex } = props
-	const { year, month, day } = store.rootState.currentDate
-	const monthName = store.rootState.monthsList[monthIndex]
-
-	const isCurrentMonth = month === Number(monthIndex)
-	const dayOfMonth = isCurrentMonth && day === Number(dayIndex)
-
-	const activitiesID = `${year}-${monthIndex}-${dayIndex}`
-	const activities = store.rootState.activities[activitiesID]
-
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	const toggleModal = useCallback(() => {
+
+	const { monthID, dayID } = props
+	const { year, month, day } = store.state.currentDate
+
+	const monthName = store.state.monthsList[monthID]
+
+	const isCurrentMonth = month === Number(monthID)
+	const dayOfMonth = isCurrentMonth && day === Number(dayID)
+
+	const activitiesID = `${year}-${monthID}-${dayID}`
+	const activities = store.state.activities[activitiesID]
+
+	const toggleModal = useCallback(e => {
 		setIsModalOpen(!isModalOpen)
 	})
-
-	console.log({ dayOfMonth, isCurrentMonth, day, dayIndex })
 
 	return (
 		<main>
@@ -32,20 +31,19 @@ function Day(props) {
 				monthName={monthName}
 				isCurrentMonth={isCurrentMonth}
 				dayOfMonth={dayOfMonth}
-				dayIndex={Number(dayIndex)}
-				monthIndex={monthIndex}
+				dayID={dayID}
+				monthID={monthID}
 				openModal={toggleModal}
 			/>
-			<DaySection
-				activities={activities}
-				updateTodoItemStatus={{
-					activitiesID,
-					event: store.events.updateTodoItemStatus
-				}}
-				removeActivity={store.events.removeActivity}
-			/>
+			<DaySection activities={activities} activitiesID={activitiesID} />
 
-			{isModalOpen && <Modal toggleModal={toggleModal} />}
+			{isModalOpen && (
+				<Modal
+					toggleModal={toggleModal}
+					dayID={dayID}
+					monthID={monthID}
+				/>
+			)}
 		</main>
 	)
 }

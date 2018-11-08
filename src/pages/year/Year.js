@@ -8,8 +8,7 @@ import Box from '../../components/Box'
 
 function Year(props) {
 	const store = useContext(RootContext)
-
-	let year = store.rootState.currentDate.year
+	let year = store.state.currentDate.year
 
 	return (
 		<main>
@@ -19,8 +18,8 @@ function Year(props) {
 				</Box>
 			</Header>
 			<YearSection
-				monthsList={store.rootState.monthsList}
-				currentMonthIndex={store.rootState.currentDate.month}
+				monthsList={store.state.monthsList}
+				currentMonthIndex={store.state.currentDate.month}
 			/>
 		</main>
 	)

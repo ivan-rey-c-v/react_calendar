@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { RootContext } from '../../context/RootContext'
 import setRandomID from '../../utils/setRandomID'
 
@@ -12,6 +12,7 @@ import styled from 'styled-components'
 
 const TimeField = styled.div`
 	margin-top: 0.75rem;
+	padding-bottom: 0.25rem;
 	display: flex;
 	justify-content: center;
 
@@ -35,145 +36,114 @@ const TimeField = styled.div`
 		}
 	}
 `
+const Memo = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: gray;
+	font-size: 0.75rem;
+	font-weight: 600;
+`
 
 function Reminder(props) {
+	const [hour, setHour] = useState('')
+	const [minute, setMinute] = useState('')
+	const [reminder, setReminder] = useState('')
+	const store = useContext(RootContext)
+
+	const handleSetHour = useCallback(e => {
+		let val = e.target.value
+		val = val.replace(/[A-Z]/gi, '')
+
+		let withinBounds = Number(val) >= 0 && Number(val) < 24
+		if (withinBounds) {
+			setHour(val)
+		}
+	})
+	const handleSetMinute = useCallback(e => {
+		let val = e.target.value
+		val = val.replace(/[A-Z]/gi, '')
+
+		let withinBounds = Number(val) >= 0 && Number(val) < 60
+		if (withinBounds) {
+			setMinute(val)
+		}
+	})
+	const handleSetReminder = useCallback(e => {
+		setReminder(e.target.value)
+	})
+
+	const handleAddReminder = useCallback(e => {
+		e.preventDefault()
+
+		const { monthID, dayID } = props
+		const { year } = store.state.currentDate
+		const activityDateID = `${year}-${monthID}-${dayID}`
+		const activity = {
+			id: setRandomID('Reminder'),
+			type: 'Reminder',
+			title: `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`,
+			content: reminder
+		}
+
+		store.dispatch({ type: 'ADD_ACTIVITY', activityDateID, activity })
+		props.closeModal()
+	})
+
+	const hasContents = hour !== '' && minute !== '' && reminder !== ''
+
 	return (
-		<FormLayout>
+		<FormLayout onSubmit={handleAddReminder}>
 			<HeaderField>
 				<h3>REMINDER</h3>
 			</HeaderField>
 			<TimeField>
 				<label htmlFor="">
 					<small>HOUR</small>
-					<input type="tel" maxLength="2" />
+					<input
+						type="tel"
+						maxLength="2"
+						value={hour}
+						onChange={handleSetHour}
+					/>
 				</label>
 
 				<label htmlFor="">
 					<small>MINUTE</small>
-					<input type="tel" maxLength="2" />
+					<input
+						type="tel"
+						maxLength="2"
+						value={minute}
+						onChange={handleSetMinute}
+					/>
 				</label>
 			</TimeField>
+			<Memo>
+				<p>
+					24 <small> Hour format</small>
+				</p>
+			</Memo>
 
 			<TextAreaField>
 				<textarea
 					name="reminder-content"
 					id="reminder-content"
 					rows="6"
+					value={reminder}
+					onChange={handleSetReminder}
 				/>
 			</TextAreaField>
 
 			<ActionsField>
-				<Button value="Cancel" />
-				<Button value="Add Reminder" primary={true} />
+				<Button value="Cancel" onClick={props.closeModal} />
+				<Button
+					value="Add Reminder"
+					primary={true}
+					disabled={!hasContents}
+				/>
 			</ActionsField>
 		</FormLayout>
 	)
 }
 
 export default React.memo(Reminder)
-
-// export default class Reminder extends Component {
-// 	constructor(props) {
-// 		super(props)
-// 		this.state = {
-// 			hour: 1,
-// 			minutes: 1,
-// 			content: ''
-// 		}
-// 	}
-
-// 	setNewHour = hour => {
-// 		this.setState({ hour })
-// 	}
-// 	setNewMinutes = minutes => {
-// 		this.setState({ minutes })
-// 	}
-// 	handleContentChange = e => {
-// 		const content = e.target.value
-// 		this.setState({ content })
-// 	}
-// 	cancel = e => {
-// 		e.preventDefault()
-// 		const { monthIndex, dayIndex } = this.props.match.params
-// 		this.props.history.push(
-// 			`/month-${monthIndex}/day-${dayIndex}/choosefeature`
-// 		)
-// 	}
-
-// 	addReminder = (e, rootState, events) => {
-// 		e.preventDefault()
-// 		const { monthIndex, dayIndex } = this.props.match.params
-// 		const { hour, minutes, content } = this.state
-// 		const title = `${String(hour).padStart(2, '0')}:${String(
-// 			minutes
-// 		).padStart(2, '0')}`
-// 		const activityID = `${
-// 			rootState.currentDate.year
-// 		}-${monthIndex}-${dayIndex}`
-
-// 		const payload = {
-// 			type: 'Reminder',
-// 			title,
-// 			content,
-// 			activityID,
-// 			id: setRandomID('Reminder-')
-// 		}
-// 		events.addFeatureItem(payload)
-// 		this.props.history.push(`/month-${monthIndex}/day-${dayIndex}`)
-// 		console.log('Reminder was saved!')
-// 	}
-
-// 	render() {
-// 		return (
-// 			<RootContext.Consumer>
-// 				{({ rootState, events }) => {
-// 					return (
-// 						<Main>
-// 							<form action="">
-// 								<h3>REMINDER</h3>
-// 								<div className="time">
-// 									<ReminderTime
-// 										limit={24}
-// 										onChange={this.setNewHour}
-// 									/>
-// 									<p className="colon">:</p>
-// 									<ReminderTime
-// 										limit={60}
-// 										onChange={this.setNewMinutes}
-// 									/>
-// 								</div>
-// 								<textarea
-// 									name="reminder-content"
-// 									id="reminder-content"
-// 									cols="30"
-// 									rows="10"
-// 									value={this.state.content}
-// 									onChange={this.handleContentChange}
-// 								/>
-
-// 								<div className="button-div">
-// 									<Button
-// 										value="Cancel"
-// 										onClick={this.cancel}
-// 									/>
-// 									<Button
-// 										value="Add Reminder"
-// 										primary={true}
-// 										disabled={!this.state.content}
-// 										onClick={e => {
-// 											this.addReminder(
-// 												e,
-// 												rootState,
-// 												events
-// 											)
-// 										}}
-// 									/>
-// 								</div>
-// 							</form>
-// 						</Main>
-// 					)
-// 				}}
-// 			</RootContext.Consumer>
-// 		)
-// 	}
-// }
