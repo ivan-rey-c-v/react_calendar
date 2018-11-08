@@ -21,6 +21,7 @@ function Day(props) {
 	const activities = store.state.activities[activitiesID]
 
 	const toggleModal = useCallback(e => {
+		e.preventDefault()
 		setIsModalOpen(!isModalOpen)
 	})
 
