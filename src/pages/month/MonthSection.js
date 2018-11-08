@@ -7,7 +7,7 @@ import styled from 'styled-components'
 const OrderedList = styled.ol`
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
-	grid-auto-rows: 5rem;
+	grid-auto-rows: 4.75rem;
 	justify-items: center;
 	align-items: center;
 

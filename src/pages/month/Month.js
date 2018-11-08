@@ -8,9 +8,6 @@ import MonthHeader from './MonthHeader'
 import WeekDays from './WeekDays'
 import MonthSection from './MonthSection'
 
-import HeaderNav from '../../components/header/HeaderNav'
-
-console.log('This is in the month page module.')
 function Month(props) {
 	const store = useContext(RootContext)
 
@@ -22,32 +19,12 @@ function Month(props) {
 	const dayOfMonth = isCurrentMonth && day
 	const startOfMonth = getStartOfMonth(year, monthIndex)
 
-	const goToYear = e => {
-		navigate('/')
-	}
-	console.log({
-		props,
-		startOfMonth,
-		dayOfMonth,
-		daysArray,
-		monthName,
-		isCurrentMonth,
-		monthIndex
-	})
-
 	return (
 		<main>
-			{false && (
-				<HeaderNav>
-					<p>{year}</p>
-				</HeaderNav>
-			)}
-
 			<MonthHeader
 				monthName={monthName}
 				isCurrentMonth={isCurrentMonth}
 				year={year}
-				onClick={goToYear}
 			/>
 			<WeekDays />
 			<MonthSection
