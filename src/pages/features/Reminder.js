@@ -3,7 +3,7 @@ import { RootContext } from '../../context/RootContext'
 import setRandomID from '../../utils/setRandomID'
 
 import Button from './Button'
-import FormLayout from '../../layouts/FormLayout'
+import FeatureLayout from '../../layouts/FeatureLayout'
 import HeaderField from '../../layouts/HeaderField'
 import TextAreaField from '../../layouts/TextAreaField'
 import ActionsField from '../../layouts/ActionsField'
@@ -60,6 +60,7 @@ function Reminder(props) {
 			setHour(val)
 		}
 	})
+
 	const handleSetMinute = useCallback(e => {
 		let val = e.target.value
 		val = val.replace(/[A-Z]/gi, '')
@@ -69,13 +70,12 @@ function Reminder(props) {
 			setMinute(val)
 		}
 	})
+
 	const handleSetReminder = useCallback(e => {
 		setReminder(e.target.value)
 	})
 
 	const handleAddReminder = useCallback(e => {
-		e.preventDefault()
-
 		const { monthID, dayID } = props
 		const { year } = store.state.currentDate
 		const activityDateID = `${year}-${monthID}-${dayID}`
@@ -93,7 +93,7 @@ function Reminder(props) {
 	const hasContents = hour !== '' && minute !== '' && reminder !== ''
 
 	return (
-		<FormLayout onSubmit={handleAddReminder}>
+		<FeatureLayout>
 			<HeaderField>
 				<h3>REMINDER</h3>
 			</HeaderField>
@@ -140,9 +140,10 @@ function Reminder(props) {
 					value="Add Reminder"
 					primary={true}
 					disabled={!hasContents}
+					onClick={handleAddReminder}
 				/>
 			</ActionsField>
-		</FormLayout>
+		</FeatureLayout>
 	)
 }
 

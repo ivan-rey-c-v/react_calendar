@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useContext } from 'react'
 import { RootContext } from '../../context/RootContext'
+import useInput from '../../hooks/useInput'
 import setRandomID from '../../utils/setRandomID'
 
 import Button from './Button'
 import TitleInput from './TitleInput'
-import FormLayout from '../../layouts/FormLayout'
+import FeatureLayout from '../../layouts/FeatureLayout'
 import HeaderField from '../../layouts/HeaderField'
 import ActionsField from '../../layouts/ActionsField'
 import TextAreaField from '../../layouts/TextAreaField'
@@ -12,14 +13,13 @@ import TextAreaField from '../../layouts/TextAreaField'
 function Notes(props) {
 	const [note, setNote] = useState('')
 	const store = useContext(RootContext)
+	const titleInput = useInput('')
 
 	const handleNoteChange = useCallback(e => {
 		setNote(e.target.value)
 	})
-	const handleAddNote = useCallback(e => {
-		e.preventDefault()
-		const { title: titleInput } = e.target.elements
 
+	const handleAddNote = useCallback(e => {
 		const { monthID, dayID } = props
 		const { year } = store.state.currentDate
 		const activityDateID = `${year}-${monthID}-${dayID}`
@@ -35,12 +35,12 @@ function Notes(props) {
 	})
 
 	return (
-		<FormLayout onSubmit={handleAddNote}>
+		<FeatureLayout>
 			<HeaderField className="headerField">
 				<h3>NOTES</h3>
 			</HeaderField>
 
-			<TitleInput />
+			<TitleInput {...titleInput} />
 
 			<TextAreaField>
 				<textarea
@@ -58,9 +58,10 @@ function Notes(props) {
 					value="Add Todo"
 					primary={true}
 					disabled={note === ''}
+					onClick={handleAddNote}
 				/>
 			</ActionsField>
-		</FormLayout>
+		</FeatureLayout>
 	)
 }
 

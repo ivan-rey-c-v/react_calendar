@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from './Button'
-import FormLayout from '../../layouts/FormLayout'
+import FeatureLayout from '../../layouts/FeatureLayout'
 
 import styled from 'styled-components'
 
@@ -30,7 +30,7 @@ const ButtonWrapper = styled.div`
 
 function ChooseFeature(props) {
 	return (
-		<FormLayout>
+		<FeatureLayout>
 			<UnorderedList onClick={props.handleChooseFeature}>
 				<List>Reminder</List>
 				<List>Todo</List>
@@ -40,7 +40,7 @@ function ChooseFeature(props) {
 			<ButtonWrapper>
 				<Button value="Close" onClick={props.closeModal} />
 			</ButtonWrapper>
-		</FormLayout>
+		</FeatureLayout>
 	)
 }
 

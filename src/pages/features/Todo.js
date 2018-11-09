@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useRef, useContext } from 'react'
 import { RootContext } from '../../context/RootContext'
+import useInput from '../../hooks/useInput'
 import setRandomID from '../../utils/setRandomID'
 
 import Button from './Button'
 import TitleInput from './TitleInput'
-import FormLayout from '../../layouts/FormLayout'
+import FeatureLayout from '../../layouts/FeatureLayout'
 import HeaderField from '../../layouts/HeaderField'
 import ActionsField from '../../layouts/ActionsField'
 
@@ -20,14 +21,18 @@ const TodosField = styled.div`
 	> input {
 		border: none;
 		font-size: 1rem;
+		font-weight: 600;
+		letter-spacing: 1px;
 		padding: 0.25rem 0.5rem 0.25rem 0.75rem;
-		border-bottom: 2px solid violet;
+		color: #5b5063;
+		border-bottom: 2px solid #c388ea;
 	}
 `
 
 function Todo(props) {
 	const store = useContext(RootContext)
 	const todosNode = useRef(null)
+	const titleInput = useInput('')
 	const [todos, setTodos] = useState([])
 
 	const handleAddTodo = useCallback(e => {
@@ -74,9 +79,6 @@ function Todo(props) {
 	})
 
 	const handleAddTodos = useCallback(e => {
-		e.preventDefault()
-		const { title: titleInput } = e.target.elements
-
 		const { monthID, dayID } = props
 		const { year } = store.state.currentDate
 		const activityDateID = `${year}-${monthID}-${dayID}`
@@ -92,12 +94,12 @@ function Todo(props) {
 	})
 
 	return (
-		<FormLayout onSubmit={handleAddTodos}>
+		<FeatureLayout>
 			<HeaderField>
 				<h3>TODO</h3>
 			</HeaderField>
 
-			<TitleInput />
+			<TitleInput {...titleInput} />
 
 			<TodosField ref={todosNode}>
 				{[...todos, { text: '' }].map((todo, index) => {
@@ -121,9 +123,10 @@ function Todo(props) {
 					value="Add Todo"
 					primary={true}
 					disabled={todos.length === 0}
+					onClick={handleAddTodos}
 				/>
 			</ActionsField>
-		</FormLayout>
+		</FeatureLayout>
 	)
 }
 

@@ -4,15 +4,18 @@ import { RootContext } from '../../context/RootContext'
 import styled from 'styled-components'
 
 const Div = styled.div`
-	> input {
-		margin-left: 1rem;
-	}
-	> span {
-		margin-left: 1rem;
-		font-weight: 600;
-	}
+	padding: 0.1rem 0;
+`
+const Checkbox = styled.input`
+	margin-left: 2rem;
+	cursor: pointer;
+`
+const Item = styled('label')`
+	margin-left: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
 
-	> .done {
+	&.done {
 		text-decoration: line-through;
 		opacity: 0.75;
 	}
@@ -32,41 +35,22 @@ function TodoItem(props) {
 	})
 
 	return (
-		<Div className="todo-item" key={todo.id}>
-			<input
+		<Div>
+			<Checkbox
 				type="checkbox"
+				id={`todo-checkbox-${todo.id}`}
 				value={todo.isDone}
 				checked={todo.isDone}
 				onChange={handleToggleTodo}
 			/>
-			<span className={todo.isDone ? 'done' : ''}>{todo.text}</span>
+			<Item
+				className={todo.isDone ? 'done' : ''}
+				htmlFor={`todo-checkbox-${todo.id}`}
+			>
+				{todo.text}
+			</Item>
 		</Div>
 	)
 }
 
 export default React.memo(TodoItem)
-
-// export default class _TodoItem extends Component {
-// 	updateTodoItemStatus = () => {
-// 		const { updateTodoItemStatus, todo } = this.props
-// 		const { event, activitiesID, todoID } = updateTodoItemStatus
-// 		event(activitiesID, todoID, todo.id)
-// 	}
-
-// 	render() {
-// 		const { todo } = this.props
-// 		return (
-// 			<Div className="todo-item" key={todo.id}>
-// 				<input
-// 					type="checkbox"
-// 					value={todo.done}
-// 					checked={todo.done}
-// 					onChange={this.updateTodoItemStatus}
-// 				/>
-// 				<span className={todo.done ? 'done' : ''}>{todo.text}</span>
-// 			</Div>
-// 		)
-// 	}
-// }
-
-// TOGGLE_TODO_ITEM

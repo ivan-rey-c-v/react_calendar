@@ -5,51 +5,48 @@ import TodoItem from './TodoItem'
 import styled from 'styled-components'
 
 const Div = styled.div`
-	padding: 0.25rem 1rem;
-	> div {
-		margin-top: 0.25rem;
-	}
-	> .header {
-		font-size: 90%;
-		font-weight: 600;
-		color: gray;
-		> * {
-			margin-left: 0.5rem;
-		}
-	}
-	> .content {
-		font-size: 1.1rem;
-		font-weight: 600;
-	}
-
+	padding: 0.25rem 1rem 0.5rem 1rem;
+	font-weight: 600;
 	position: relative;
+`
+const Header = styled.div`
+	padding: 0.25rem;
+	color: teal;
+	letter-spacing: 1px;
 
-	> .remove {
-		position: absolute;
-		top: 0;
-		right: 0;
-		height: 2rem;
-		width: 2rem;
-		font-weight: 600;
-		color: crimson;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		cursor: pointer;
+	span {
+		font-family: serif;
+		font-size: 1.3rem;
+		margin-left: 1.5rem;
+	}
+	small {
+		opacity: 0.75;
+	}
+`
+const RemoveItem = styled.span`
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2rem;
+	width: 2rem;
+	color: crimson;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 
-		&:hover {
-			background-color: lightgray;
-		}
-		&:active {
-			transform: scale(0.9);
-		}
+	&:hover {
+		background-color: lightgray;
+	}
+	&:active {
+		transform: scale(0.9);
 	}
 `
 
 function Activity(props) {
 	const { activity, activitiesID } = props
 	const store = useContext(RootContext)
-	//
+
 	const handleRemoveActivity = useCallback(e => {
 		store.dispatch({
 			type: 'REMOVE_ACTIVITY',
@@ -60,10 +57,10 @@ function Activity(props) {
 
 	return (
 		<Div>
-			<div className="header">
+			<Header className="header">
 				<small>{activity.type}</small>
 				<span>{activity.title}</span>
-			</div>
+			</Header>
 			<div className="content">{activity.content}</div>
 			<div>
 				{activity.todos &&
@@ -77,48 +74,11 @@ function Activity(props) {
 					))}
 			</div>
 
-			<span className="remove" onClick={handleRemoveActivity}>
+			<RemoveItem className="remove" onClick={handleRemoveActivity}>
 				x
-			</span>
+			</RemoveItem>
 		</Div>
 	)
 }
 
 export default React.memo(Activity)
-
-// export default class Activity extends Component {
-// 	handleRemoveActivity = () => {
-// 		const { removeActivity, activity, updateTodoItemStatus } = this.props
-
-// 		removeActivity(updateTodoItemStatus.activitiesID, activity.id)
-// 	}
-
-// 	render() {
-// 		return (
-// 			<Div>
-// 				<div className="header">
-// 					<small>{this.props.activity.type}</small>
-// 					<span>{this.props.activity.title}</span>
-// 				</div>
-// 				<div className="content">{this.props.activity.content}</div>
-// 				<div>
-// 					{this.props.activity.todos &&
-// 						this.props.activity.todos.map(todo => (
-// 							<TodoItem
-// 								key={todo.id}
-// 								todo={todo}
-// 								updateTodoItemStatus={{
-// 									...this.props.updateTodoItemStatus,
-// 									todoID: this.props.activity.id
-// 								}}
-// 							/>
-// 						))}
-// 				</div>
-
-// 				<span className="remove" onClick={this.handleRemoveActivity}>
-// 					x
-// 				</span>
-// 			</Div>
-// 		)
-// 	}
-// }

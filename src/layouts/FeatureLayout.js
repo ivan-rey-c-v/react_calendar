@@ -2,7 +2,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 
-const Form = styled.form`
+const Div = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 90%;
@@ -12,8 +12,8 @@ const Form = styled.form`
 	padding: 1.5rem;
 `
 
-const FormLayout = props => {
-	return <Form {...props}>{props.children}</Form>
+const FeatureLayout = props => {
+	return <Div {...props}>{props.children}</Div>
 }
 
-export default React.memo(FormLayout)
+export default React.memo(FeatureLayout)

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 
 import styled from 'styled-components'
 
@@ -7,10 +7,12 @@ const InputField = styled.div`
 	display: flex;
 	flex-direction: column;
 	font-weight: 600;
+	font-family: serif;
 
 	label {
 		font-size: 0.8rem;
 		letter-spacing: 1px;
+		cursor: pointer;
 
 		small {
 			color: lightgray;
@@ -18,7 +20,7 @@ const InputField = styled.div`
 	}
 
 	input {
-		font-size: 1rem;
+		font-size: 1.25rem;
 		font-weight: 900;
 		letter-spacing: 1px;
 		padding: 0.5rem 0.5rem 0.25rem 1rem;
@@ -28,23 +30,19 @@ const InputField = styled.div`
 `
 
 const TitleInput = props => {
-	const [title, setTitle] = useState('')
-	const handleChange = useCallback(e => {
-		setTitle(e.target.value)
-	})
-
 	return (
 		<InputField>
-			<label htmlFor="">
+			<label htmlFor="title-input">
 				<p>
-					Title <small>OPTIONAL</small>{' '}
+					Title <small>OPTIONAL</small>
 				</p>
 			</label>
 			<input
 				type="text"
-				name="title"
-				value={title}
-				onChange={handleChange}
+				name="title-input"
+				id="title-input"
+				value={props.value}
+				onChange={props.onChange}
 			/>
 		</InputField>
 	)

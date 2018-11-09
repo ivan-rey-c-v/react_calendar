@@ -6,7 +6,7 @@ const Field = styled.div`
 	margin-top: 1rem;
 
 	textarea {
-		font-size: 1rem;
+		font-size: 1.25rem;
 		width: 100%;
 		padding: 0.5rem 0.75rem;
 	}
